@@ -19,7 +19,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
     "react-toastify": "^10.0.5",
-    "react-webcam": "^7.2.0"
+    "react-webcam": "^7.2.0",
+    "vite-plugin-mediapipe": "^0.1.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

@@ -14,9 +14,6 @@ export default function NavBar() {
           <Link to="/navigation" className="text-white mr-2">
             Navigatie
           </Link>
-          <Link to="/data" className="text-white">
-            FAQ
-          </Link>
         </div>
       </div>
     </div>

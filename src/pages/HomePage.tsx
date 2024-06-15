@@ -25,12 +25,6 @@ export default function HomePage() {
             >
               Navigatie
             </button>
-            <button
-              onClick={() => navigate("faq")}
-              className="bg-black text-white p-2 rounded-lg w-full hover:bg-black/80"
-            >
-              FAQ
-            </button>
           </div>
         </section>
       </main>

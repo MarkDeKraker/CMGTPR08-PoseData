@@ -5,7 +5,6 @@ export default function NavigationPage() {
   return (
     <div>
       <NavBar />
-
       <NavigationMap />
     </div>
   );

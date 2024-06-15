@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Hands, Results } from "@mediapipe/hands";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
@@ -6,8 +6,12 @@ import { HAND_CONNECTIONS } from "@mediapipe/hands";
 import { Camera } from "@mediapipe/camera_utils";
 import posedata from "../assets/json/poses-data.json";
 import { PoseData, PoseItem } from "../types/PoseData";
-import { toast } from "react-toastify";
 import knn from "knear";
+import {
+  IconHandFinger,
+  IconHandGrab,
+  IconHandStop,
+} from "@tabler/icons-react";
 
 function NavigationMap() {
   //#region Configuration
@@ -15,6 +19,7 @@ function NavigationMap() {
   const webcamRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lastActionTime = useRef<number>(0);
+  const [hasError, setHasError] = useState(false);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -46,6 +51,7 @@ function NavigationMap() {
   };
 
   function isValidDataItem(item: PoseItem): item is PoseItem {
+    console.log("test");
     return (
       typeof item.label === "string" &&
       Array.isArray(item.vector) &&
@@ -53,12 +59,14 @@ function NavigationMap() {
     );
   }
 
-  function validateJson(json: PoseData): json is PoseData {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function validateJson(json: any): json is PoseData {
     if (
       typeof json !== "object" ||
       json === null ||
       !Array.isArray(json.data)
     ) {
+      console.log("Invalid JSON data");
       return false;
     }
 
@@ -150,8 +158,11 @@ function NavigationMap() {
   //#endregion
 
   useEffect(() => {
+    const test = validateJson(posedata);
+    console.log(test);
     if (!validateJson(posedata)) {
-      toast.error("Invalid JSON data");
+      setHasError(true);
+      return;
     }
 
     posedata.data.forEach((pose) => {
@@ -260,23 +271,84 @@ function NavigationMap() {
 
   return (
     <>
-      <div className="border-2 p-5 rounded-lg shadow-lg m-5">
-        <div className="grid grid-cols-2 w-full gap-20">
-          <div className="w-[570px] mx-auto">
-            <video ref={webcamRef} className="hidden" autoPlay playsInline />
-            <canvas ref={canvasRef} className="z-20 h-[500px] w-[750px]" />
-          </div>
-          <div>
-            {isLoaded ? (
-              <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={center}
-                zoom={16}
-                onLoad={onLoad}
-              ></GoogleMap>
-            ) : (
-              <div>Webcam is aan het laden..</div>
-            )}
+      <div>
+        <div className="border-2 p-5 rounded-lg shadow-lg m-5">
+          {!hasError ? (
+            <div className="grid grid-cols-2 w-full gap-20">
+              <div className="w-[570px] mx-auto">
+                <video
+                  ref={webcamRef}
+                  className="hidden"
+                  autoPlay
+                  playsInline
+                />
+                <canvas ref={canvasRef} className="z-20 h-[500px] w-[750px]" />
+              </div>
+              <div>
+                {isLoaded ? (
+                  <GoogleMap
+                    mapContainerStyle={containerStyle}
+                    center={center}
+                    zoom={16}
+                    onLoad={onLoad}
+                  ></GoogleMap>
+                ) : (
+                  <div>Webcam is aan het laden..</div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div>
+              <h1 className="text-center font-medium">
+                Er is een fout opgetreden bij het laden van de data
+              </h1>
+            </div>
+          )}
+        </div>
+        <div className="border-2 p-5 rounded-lg shadow-lg m-5">
+          <div className="flex space-x-2 justify-center">
+            <div
+              onClick={zoomIn}
+              className="flex space-x-2 border-2 rounded-lg p-2 cursor-pointer hover:bg-slate-200"
+            >
+              <IconHandStop size={24} />
+              <p>Zoom in</p>
+            </div>
+            <div
+              onClick={zoomOut}
+              className="flex space-x-2 border-2 rounded-lg p-2 cursor-pointer hover:bg-slate-200"
+            >
+              <IconHandGrab size={24} />
+              <p>Zoom out</p>
+            </div>
+            <div
+              onClick={panUp}
+              className="flex space-x-2 border-2 rounded-lg p-2 cursor-pointer hover:bg-slate-200"
+            >
+              <IconHandFinger size={24} />
+              <p>Omhoog</p>
+            </div>
+            <div
+              onClick={panDown}
+              className="flex space-x-2 border-2 rounded-lg p-2 cursor-pointer hover:bg-slate-200"
+            >
+              <IconHandFinger size={24} className="rotate-180" />
+              <p>Omlaag</p>
+            </div>
+            <div
+              onClick={panRight}
+              className="flex space-x-2 border-2 rounded-lg p-2 cursor-pointer hover:bg-slate-200 "
+            >
+              <IconHandFinger size={24} className="rotate-90" />
+              <p>Rechts</p>
+            </div>
+            <div
+              onClick={panLeft}
+              className="flex space-x-2 border-2 rounded-lg p-2 cursor-pointer hover:bg-slate-200"
+            >
+              <IconHandFinger size={24} className="rotate-[270deg]" />
+              <p>Links</p>
+            </div>
           </div>
         </div>
       </div>

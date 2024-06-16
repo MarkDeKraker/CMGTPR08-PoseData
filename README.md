@@ -1,30 +1,40 @@
-# React + TypeScript + Vite
+# Smart Technologies - Opdracht 2
+Posedata
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Links
+- Live applicatie: https://cmgtpr-08-pose-data.vercel.app/
 
-Currently, two official plugins are available:
+## Hoe installeer je het project
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Vereiste software
+- NodeJS LTS
+- Visual Studio Code
 
-## Expanding the ESLint configuration
+### Clone het project
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Dit is de link naar het **[project](https://github.com/MarkDeKraker/CMGTPR08-PoseData.git)**
 
-- Configure the top-level `parserOptions` property like this:
+Pull het project naar je machine
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+
+### Projectsettings
+
+Open het `.env.example` bestand en dupliceer deze in dezelfde map (Verander de naam van de nieuwe `.env.example` file naar `.env`) en vul de juiste informatie in die benodigd is. 
+
+
+#### Installatie van het project
+```bash
+npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+```bash
+npm run dev
+```
+
+Navigeer naar http://localhost:5173 en je zal hier de gebruikersinterface zien van applicatie
+
+**Gefeliciteerd, de installatie is geslaagd!**
+
+### Eventuele issues die kunnen optreden
+- Een geldige Google Maps Api key is nodig voor het inladen van de map.
+- Soms is er een probleem dat de camera niet inlaad, probeer dan de pagina te verversen.

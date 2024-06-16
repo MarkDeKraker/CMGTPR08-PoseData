@@ -39,10 +39,10 @@ function NavigationMap() {
     lng: 4.4849059,
   };
 
-  // Check if enough time has passed since last action
+  // Check if enough time has passed since last action to avoid spamming actions
   const canPerformAction = () => {
     const now = Date.now();
-    return now - lastActionTime.current >= 2000; // 2000 milliseconds = 2 seconds
+    return now - lastActionTime.current >= 2000;
   };
 
   // Update last action time to current time
@@ -50,8 +50,8 @@ function NavigationMap() {
     lastActionTime.current = Date.now();
   };
 
+  // Check if the data item is valid
   function isValidDataItem(item: PoseItem): item is PoseItem {
-    console.log("test");
     return (
       typeof item.label === "string" &&
       Array.isArray(item.vector) &&
@@ -158,24 +158,26 @@ function NavigationMap() {
   //#endregion
 
   useEffect(() => {
-    const test = validateJson(posedata);
-    console.log(test);
+    // First validate the JSON data before processing it in the machine learning model
     if (!validateJson(posedata)) {
       setHasError(true);
       return;
     }
 
+    // Foreach pose data item, learn the pose data in the machine learning model
     posedata.data.forEach((pose) => {
       machine.current.learn(pose.vector, pose.label);
     });
   }, []);
 
   useEffect(() => {
+    // Load the hands model
     const hands = new Hands({
       locateFile: (file: string) =>
         `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
     });
 
+    // Configure the hands model with the following options
     hands.setOptions({
       maxNumHands: 1,
       modelComplexity: 1,
@@ -183,10 +185,13 @@ function NavigationMap() {
       minTrackingConfidence: 0.5,
     });
 
+    // Callback function for when the model has results (detects hands in the video stream)
     hands.onResults(onResults);
 
+    // Get the webcam reference
     const videoElement = webcamRef.current;
 
+    // If the video element is available, start the camera and apply the hands model to draw the landmarks
     if (videoElement) {
       const camera = new Camera(videoElement, {
         onFrame: async () => {
@@ -198,6 +203,7 @@ function NavigationMap() {
       camera.start();
     }
 
+    // Callback function for when the model has results
     function onResults(results: Results) {
       const canvasElement = canvasRef.current;
       if (!canvasElement) return;
@@ -205,6 +211,7 @@ function NavigationMap() {
       const canvasCtx = canvasElement.getContext("2d");
       if (!canvasCtx) return;
 
+      // Draw the video stream on the canvas
       canvasCtx.save();
       canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
       canvasCtx.drawImage(
@@ -215,6 +222,7 @@ function NavigationMap() {
         canvasElement.height
       );
 
+      // Draw the landmarks on the canvas
       if (results.multiHandLandmarks) {
         for (const landmarks of results.multiHandLandmarks) {
           drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
@@ -226,14 +234,17 @@ function NavigationMap() {
             lineWidth: 2,
           });
 
+          // Get the pose detected from the landmarks, and make a new array with the x, y, and z coordinates so that the machine can classify it.
           const poseDetected = landmarks.flatMap((landmark) => [
             landmark.x,
             landmark.y,
             landmark.z,
           ]);
 
+          // Classify the pose detected by the machine learning model
           const result = machine.current.classify(poseDetected);
 
+          // Perform the action based on the result based on the learned pose data
           if (mapRef.current != null && result != null) {
             switch (result) {
               case "finger left":

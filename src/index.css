@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-video canvas {
+video, canvas {
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
   }

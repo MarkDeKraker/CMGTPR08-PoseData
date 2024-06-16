@@ -12,7 +12,7 @@ export default function NavBar() {
         </div>
         <div className="flex space-x-4">
           <Link to="/navigation" className="text-white mr-2">
-            Navigatie
+            Demo
           </Link>
         </div>
       </div>

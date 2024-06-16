@@ -23,7 +23,7 @@ export default function HomePage() {
               onClick={() => navigate("/navigation")}
               className="bg-black text-white p-2 rounded-lg w-full hover:bg-black/80"
             >
-              Navigatie
+              Demo
             </button>
           </div>
         </section>

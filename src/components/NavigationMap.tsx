@@ -306,6 +306,9 @@ function NavigationMap() {
           )}
         </div>
         <div className="border-2 p-5 rounded-lg shadow-lg m-5">
+          <p className="text-center font-medium">
+            Beweeg de map door onderstaande handgebaren te maken
+          </p>
           <div className="flex space-x-2 justify-center">
             <div
               onClick={zoomIn}
